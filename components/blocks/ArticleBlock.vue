@@ -43,25 +43,27 @@
       <!-- eslint-disable-next-line -->
       <div class="content">
         <div v-for="(intro, i) in article.recipeIntros" :key="i">
-          <p style="margin-top: 1rem; white-space: pre-line;">
+          <p style="white-space: pre-line;">
             {{ intro.text }}
           </p>
           <div v-if="intro.imageUrl" class="image-wrapper">
             <img :src="intro.imageUrl" :alt="article.title" />
           </div>
         </div>
-      </div>
-      <div v-if="article.youtubeUrl">
-        <h4 style="padding-top: 10px;">RECIPE VIDEO</h4>
-        <div class="video-container">
-          <iframe
-            width="853"
-            height="480"
-            :src="article.youtubeUrl"
-            frameborder="0"
-            allowfullscreen
-          ></iframe>
+
+        <div v-if="article.youtubeUrl">
+          <h4>RECIPE VIDEO</h4>
+          <div class="video-container">
+            <iframe
+              width="853"
+              height="480"
+              :src="article.youtubeUrl"
+              frameborder="0"
+              allowfullscreen
+            ></iframe>
+          </div>
         </div>
+        <h4>RECIPE CARD</h4>
       </div>
 
       <recipe-step-block :article="article" />
@@ -265,6 +267,7 @@ header {
     font-size: $text-sm;
     margin-bottom: 1rem;
     line-height: 1.4;
+    letter-spacing: $-ls2;
     code {
       background-color: #d2f3e1;
       border-radius: 0.25rem;

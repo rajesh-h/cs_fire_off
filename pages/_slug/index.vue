@@ -2,9 +2,9 @@
   <div class="page-wrapper">
     <div class="article-content-wrapper">
       <article-block class="article-block" />
-      <!-- <div class="aside-username-wrapper">
-        <aside-username-block class="aside-username-block" />
-      </div> -->
+      <div class="aside-username-wrapper">
+        <aside-block class="aside-username-block" />
+      </div>
     </div>
     <!-- <comments-block class="comments-block" /> -->
   </div>
@@ -13,13 +13,13 @@
 <script>
 import ArticleBlock from '@/components/blocks/ArticleBlock'
 // import CommentsBlock from '@/components/blocks/CommentsBlock'
-// import AsideUsernameBlock from '@/components/blocks/AsideUsernameBlock'
+import AsideBlock from '@/components/blocks/AsideBlock'
 
 export default {
   components: {
-    ArticleBlock
+    ArticleBlock,
     // CommentsBlock,
-    // AsideUsernameBlock
+    AsideBlock
   }
 }
 </script>
