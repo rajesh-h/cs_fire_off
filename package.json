@@ -1,8 +1,8 @@
 {
-  "name": "nuxt-dev-to-clone",
+  "name": "cookingshooking",
   "version": "1.0.0",
-  "description": "Dev.to clone with NuxtJS",
-  "author": "Sergey Bedritsky",
+  "description": "Cooking Shooking",
+  "author": "Rajesh",
   "private": true,
   "scripts": {
     "dev": "nuxt",
@@ -12,12 +12,17 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
+    "@nuxtjs/firebase": "^5.2.0",
+    "core-js": "2",
+    "firebase": "^7.14.2",
     "nuxt": "^2.12.2",
     "nuxt-ackee": "^1.0.1",
+    "nuxt-dayjs-module": "^1.1.2",
     "vue-content-placeholders": "^0.2.1",
     "vue-observe-visibility": "^0.4.6"
   },
   "devDependencies": {
+    "@nuxtjs/color-mode": "^1.0.0",
     "@nuxtjs/eslint-config": "^2.0.0",
     "@nuxtjs/eslint-module": "^1.2.0",
     "@nuxtjs/style-resources": "^1.0.0",

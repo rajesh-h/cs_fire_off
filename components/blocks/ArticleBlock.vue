@@ -15,69 +15,111 @@
         <h1>{{ article.title }}</h1>
         <div class="tags">
           <nuxt-link
-            v-for="tag in article.tags"
-            :key="tag"
-            :to="{ name: 't-tag', params: { tag } }"
+            v-for="category in article.categories"
+            :key="category"
+            :to="{ name: 'category-slug', params: { slug: category } }"
             class="tag"
           >
-            #{{ tag }}
+            #{{ category }}
           </nuxt-link>
         </div>
-        <div v-if="article.cover_image" class="image-wrapper">
-          <img :src="article.cover_image" :alt="article.title" />
+        <div v-if="article.featuredImage" class="image-wrapper">
+          <img :src="article.featuredImage" :alt="article.title" />
         </div>
         <div class="meta">
           <div class="scl">
-            <span>
-              <heart-icon />
-              {{ article.positive_reactions_count }}
+            <span v-if="article.serves">
+              <serves-icon class="svg24" />
+              {{ article.serves }}
             </span>
-            <span class="comments" @click="scrollToComments">
-              <comments-icon />
-              {{ article.comments_count }}
+            <span v-if="article.totalTime" class="comments">
+              <time-icon class="svg24" />
+              {{ article.totalTime }}
             </span>
           </div>
-          <time>{{ article.readable_publish_date }}</time>
+          <time>{{ article.updatedFmt }}</time>
         </div>
       </header>
       <!-- eslint-disable-next-line -->
-      <div class="content" v-html="article.body_html" />
+      <div class="content">
+        <div v-for="(intro, i) in article.recipeIntros" :key="i">
+          <p style="margin-top: 1rem; white-space: pre-line;">
+            {{ intro.text }}
+          </p>
+          <div v-if="intro.imageUrl" class="image-wrapper">
+            <img :src="intro.imageUrl" :alt="article.title" />
+          </div>
+        </div>
+      </div>
+      <div v-if="article.youtubeUrl">
+        <h4 style="padding-top: 10px;">RECIPE VIDEO</h4>
+        <div class="video-container">
+          <iframe
+            width="853"
+            height="480"
+            :src="article.youtubeUrl"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <recipe-step-block :article="article" />
     </template>
   </article>
 </template>
 
 <script>
-import HeartIcon from '@/assets/icons/heart.svg?inline'
+import ServesIcon from '@/assets/icons/serves.svg?inline'
 import InlineErrorBlock from '@/components/blocks/InlineErrorBlock'
-import CommentsIcon from '@/assets/icons/comments.svg?inline'
+import TimeIcon from '@/assets/icons/time.svg?inline'
+import RecipeStepBlock from '@/components/blocks/RecipeStepBlock'
 
 export default {
   components: {
-    HeartIcon,
+    ServesIcon,
     InlineErrorBlock,
-    CommentsIcon
+    TimeIcon,
+    RecipeStepBlock
   },
   props: [],
   async fetch() {
-    const article = await fetch(
-      `https://dev.to/api/articles/${this.$route.params.article}`
-    ).then((res) => res.json())
-
-    if (article.id && article.user.username === this.$route.params.username) {
-      this.article = article
-      this.$store.commit('SET_CURRENT_ARTICLE', this.article)
+    let recipe
+    if (this.$store.getters.getArticleBySlug(this.$route.params.slug)) {
+      recipe = await this.$store.getters.getArticleBySlug(
+        this.$route.params.slug
+      )
+      this.article = recipe
     } else {
-      // set status code on server
-      if (process.server) {
-        this.$nuxt.context.res.statusCode = 404
-      }
-      throw new Error('Article not found')
+      const response = this.$fireStore
+        .collection('recipes')
+        .doc(this.$route.params.slug)
+      await response.get().then((recipe) => {
+        if (recipe.data() && recipe.data().publish === true) {
+          this.article = recipe.data()
+          // this.article = article
+          this.$store.commit('SET_CURRENT_ARTICLE', this.article)
+        } else {
+          // eslint-disable-next-line no-console
+          console.log(this.article)
+          // set status code on server
+          if (process.server) {
+            this.$nuxt.context.res.statusCode = 404
+          }
+          throw new Error('Article not found')
+        }
+      })
     }
   },
   data() {
     return {
       article: {}
     }
+  },
+  computed: {
+    // article() {
+    //   return this.$store.getters.getArticleBySlug(this.$route.params.slug)
+    // }
   },
   activated() {
     // Call fetch again if last fetch more than 60 sec ago
@@ -111,7 +153,7 @@ article {
 header {
   margin-bottom: 1rem;
   h1 {
-    font-size: $text-4xl;
+    font-size: $text-2xl;
     letter-spacing: $-ls2;
     margin-bottom: 1rem;
   }
@@ -120,6 +162,7 @@ header {
     flex-wrap: wrap;
     margin-bottom: 1.5rem;
     .tag {
+      font-size: $text-sm;
       font-weight: $bold-body-font-weight;
       line-height: 1;
       padding: 0.5rem 0.5rem;
@@ -172,6 +215,10 @@ header {
         svg {
           margin-right: 0.25rem;
         }
+        .svg24 {
+          width: 24px;
+          height: 24px;
+        }
       }
       .comments {
         cursor: pointer;
@@ -206,7 +253,7 @@ header {
     letter-spacing: $-ls2;
   }
   h4 {
-    font-size: $text-base;
+    font-size: $text-sm;
     margin-top: 2rem;
     margin-bottom: 1rem;
     letter-spacing: $-ls2;
@@ -215,12 +262,16 @@ header {
     color: $primary-color;
   }
   p {
+    font-size: $text-sm;
     margin-bottom: 1rem;
     line-height: 1.4;
     code {
       background-color: #d2f3e1;
       border-radius: 0.25rem;
       padding: 0.25rem;
+    }
+    .extra-space-on-top {
+      margin-top: 1rem !important;
     }
   }
   img {
@@ -241,5 +292,23 @@ header {
   ol {
     margin-bottom: 1rem;
   }
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+}
+
+.video-container iframe,
+.video-container object,
+.video-container embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

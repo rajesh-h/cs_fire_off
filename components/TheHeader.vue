@@ -1,7 +1,7 @@
 <template>
   <header>
     <nuxt-link to="/" class="logo-wrapper">
-      <nuxt-icon />
+      <img :src="require('~/static/logo.png')" />
     </nuxt-link>
     <nav>
       <ul>
@@ -16,22 +16,14 @@
 </template>
 
 <script>
-import NuxtIcon from '@/assets/icons/nuxt.svg?inline'
-
 export default {
-  components: {
-    NuxtIcon
-  },
+  components: {},
   data() {
     return {
       links: [
         {
-          name: 'New',
+          name: 'Home',
           slug: 'index'
-        },
-        {
-          name: 'Top',
-          slug: 'top'
         }
       ]
     }

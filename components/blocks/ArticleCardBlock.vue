@@ -1,15 +1,15 @@
 <template>
   <nuxt-link
     :to="{
-      name: 'username-article',
-      params: { username: article.user.username, article: article.id }
+      name: 'slug',
+      params: { slug: article.slug }
     }"
     tag="article"
   >
     <div class="image-wrapper">
       <img
-        v-if="article.cover_image"
-        :src="article.cover_image"
+        v-if="article.featuredImage"
+        :src="article.featuredImage"
         :alt="article.title"
       />
       <img v-else :src="article.social_image" :alt="article.title" />
@@ -17,47 +17,47 @@
     <div class="content">
       <nuxt-link
         :to="{
-          name: 'username-article',
-          params: { username: article.user.username, article: article.id }
+          name: 'slug',
+          params: { slug: article.slug }
         }"
       >
         <h1>{{ article.title }}</h1>
       </nuxt-link>
       <div class="tags">
         <nuxt-link
-          v-for="tag in article.tag_list"
-          :key="tag"
-          :to="{ name: 't-tag', params: { tag } }"
+          v-for="category in article.categories"
+          :key="category"
+          :to="{ name: 'category-slug', params: { slug: category } }"
           class="tag"
         >
-          #{{ tag }}
+          #{{ category }}
         </nuxt-link>
       </div>
       <div class="meta">
         <div class="scl">
-          <span>
-            <heart-icon />
-            {{ article.positive_reactions_count }}
+          <span v-if="article.serves">
+            <serves-icon class="svg24" />
+            {{ article.serves }}
           </span>
-          <span>
-            <comments-icon />
-            {{ article.comments_count }}
+          <span v-if="article.totalTime" class="comments">
+            <time-icon class="svg24" />
+            {{ article.totalTime }}
           </span>
         </div>
-        <time>{{ article.readable_publish_date }}</time>
+        <time>{{ article.updatedFmt }}</time>
       </div>
     </div>
   </nuxt-link>
 </template>
 
 <script>
-import HeartIcon from '@/assets/icons/heart.svg?inline'
-import CommentsIcon from '@/assets/icons/comments.svg?inline'
+import ServesIcon from '@/assets/icons/serves.svg?inline'
+import TimeIcon from '@/assets/icons/time.svg?inline'
 
 export default {
   components: {
-    HeartIcon,
-    CommentsIcon
+    ServesIcon,
+    TimeIcon
   },
   props: {
     article: {
@@ -96,7 +96,7 @@ article {
   .content {
     padding: 1rem;
     h1 {
-      font-size: $text-xl;
+      font-size: $text-lg;
       letter-spacing: $-ls2;
       margin-bottom: 1rem;
     }
@@ -105,7 +105,7 @@ article {
       flex-wrap: wrap;
       margin-bottom: 0.5rem;
       .tag {
-        font-size: $text-sm;
+        font-size: $text-ss;
         font-weight: $bold-body-font-weight;
         line-height: 1;
         padding: 0.5rem 0.5rem;
@@ -135,6 +135,10 @@ article {
           margin-right: 1rem;
           svg {
             margin-right: 0.25rem;
+          }
+          .svg24 {
+            width: 24px;
+            height: 24px;
           }
         }
       }

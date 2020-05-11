@@ -1,14 +1,14 @@
 export default {
   mode: 'universal',
   head: {
-    title: 'Dev.to clone with NuxtJS',
+    title: 'CookingShooking',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content: 'Building a dev.to clone with Nuxt.js and new fetch() hook'
+        content: 'CookingShooking'
       }
     ],
     link: [
@@ -37,11 +37,32 @@ export default {
   buildModules: [
     '@nuxtjs/eslint-module',
     '@nuxtjs/svg',
-    '@nuxtjs/style-resources'
+    '@nuxtjs/style-resources',
+    '@nuxtjs/color-mode'
   ],
-  modules: ['nuxt-ackee'],
-  ackee: {
-    server: 'https://ackee.nuxtjs.com',
-    domainId: '6336379b-8d3e-4069-9d2e-897be6a7ed4e'
-  }
+  modules: [
+    'nuxt-dayjs-module',
+    // 'nuxt-ackee',
+    [
+      '@nuxtjs/firebase',
+      {
+        config: {
+          apiKey: 'AIzaSyCjLE7YttfE5aE6eKSQpJPhhadf_PsGi2E',
+          authDomain: 'cscom-2019.firebaseapp.com',
+          databaseURL: 'https://cscom-2019.firebaseio.com',
+          projectId: 'cscom-2019',
+          storageBucket: 'cscom-2019.appspot.com',
+          messagingSenderId: '13136201488'
+        },
+        services: {
+          auth: true, // Just as example. Can be any other service.
+          firestore: true
+        }
+      }
+    ]
+  ]
+  // ackee: {
+  //   server: 'https://ackee.nuxtjs.com',
+  //   domainId: '6336379b-8d3e-4069-9d2e-897be6a7ed4e'
+  // }
 }
