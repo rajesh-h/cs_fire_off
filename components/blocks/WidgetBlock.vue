@@ -3,7 +3,7 @@
     <template v-if="$fetchState.pending">
       <div class="widget-heading loading">
         <content-placeholders>
-          <content-placeholders-heading :img="true" />
+          <content-placeholders-heading />
         </content-placeholders>
       </div>
       <div class="info">
@@ -16,8 +16,11 @@
       <inline-error-block :error="$fetchState.error" />
     </template>
     <template v-else>
+      <div class="widget-heading">
+        <h5>{{ widgetData.header }}</h5>
+      </div>
       <nuxt-link
-        v-for="link in widgetData"
+        v-for="link in widgetData.details"
         :key="link.name"
         class="widget-heading"
         :to="{
@@ -39,23 +42,32 @@ export default {
   components: {
     InlineErrorBlock
   },
-  props: [],
   fetch() {
-    this.widgetData = [
-      {
-        name: 'New',
-        slug: 'index'
-      },
-      {
-        name: 'Top',
-        slug: 'top'
-      }
-    ]
+    this.widgetData = {
+      header: 'MOST VIEWED',
+      details: [
+        {
+          name: 'Post 1',
+          slug: 'index'
+        },
+        {
+          name: 'Post 2',
+          slug: 'index'
+        },
+        {
+          name: 'Post 3',
+          slug: 'index'
+        },
+        {
+          name: 'Post 4',
+          slug: 'index'
+        }
+      ]
+    }
   },
-  fetchOnServer: false,
   data() {
     return {
-      widgetData: []
+      widgetData: {}
     }
   }
 }

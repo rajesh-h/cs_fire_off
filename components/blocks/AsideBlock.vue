@@ -19,7 +19,7 @@ aside {
   padding: 1rem;
   background-color: $elevated-surface-color;
   border-radius: 1rem;
-  .username-heading {
+  .widget-heading {
     display: flex;
     margin-bottom: 1rem;
     &:hover {
