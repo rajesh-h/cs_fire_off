@@ -6,7 +6,9 @@
       </div>
       <div class="rsb-intro-text">
         <h4>{{ article.title }}</h4>
-        <p>{{ article.recipeIntros[0].text }}</p>
+        <p v-if="article.recipeIntros">
+          {{ article.recipeIntros[0].text }}
+        </p>
       </div>
       <div class="meta">
         <table>
