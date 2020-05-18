@@ -42,6 +42,7 @@ export default {
   ],
   modules: [
     'nuxt-dayjs-module',
+    'nuxt-polyfill',
     // 'nuxt-ackee',
     [
       '@nuxtjs/firebase',
@@ -60,9 +61,32 @@ export default {
         }
       }
     ]
-  ]
+  ],
   // ackee: {
   //   server: 'https://ackee.nuxtjs.com',
   //   domainId: '6336379b-8d3e-4069-9d2e-897be6a7ed4e'
   // }
+  // Configure polyfills:
+  polyfill: {
+    features: [
+      {
+        require: 'intersection-observer',
+        detect: () => 'IntersectionObserver' in window
+      }
+    ]
+  },
+  generate: {
+    static: true,
+    async routes() {
+      const { StoreDB } = require('./services/fireinit')
+      const qs = await StoreDB.collection('recipes')
+        .where('publish', '==', true)
+        .orderBy('updated', 'desc')
+        // .limit(10)
+        .get()
+      return qs.docs.map((x) => `/${x.data().slug}`)
+    }
+  },
+  target: 'static',
+  ssr: true
 }

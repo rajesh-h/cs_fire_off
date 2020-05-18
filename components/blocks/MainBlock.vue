@@ -61,60 +61,11 @@ export default {
     }
   },
   async fetch() {
-    let response
-    switch (this.queryType) {
-      case 'index':
-        if (this.lastVisible === null) {
-          response = this.$fireStore
-            .collection('recipes')
-            .where('publish', '==', true)
-            .orderBy('updated', 'desc')
-            .limit(10)
-        } else {
-          response = this.$fireStore
-            .collection('recipes')
-            .where('publish', '==', true)
-            .orderBy('updated', 'desc')
-            .startAfter(this.lastVisible)
-            .limit(10)
-        }
-        break
-      case 'category':
-        if (this.lastVisible === null) {
-          response = this.$fireStore
-            .collection('recipes')
-            .where('publish', '==', true)
-            .where('categories', 'array-contains', this.$route.params.slug)
-            .orderBy('updated', 'desc')
-            .limit(10)
-        } else {
-          response = this.$fireStore
-            .collection('recipes')
-            .where('publish', '==', true)
-            .where('categories', 'array-contains', this.$route.params.slug)
-            .orderBy('updated', 'desc')
-            .startAfter(this.lastVisible)
-            .limit(10)
-        }
-        break
-      case 'search':
-        if (this.lastVisible === null) {
-          response = this.$fireStore
-            .collection('recipes')
-            .where('publish', '==', true)
-            .where('searchTags', 'array-contains', this.$route.params.slug)
-            .orderBy('updated', 'desc')
-            .limit(10)
-        } else {
-          response = this.$fireStore
-            .collection('recipes')
-            .where('publish', '==', true)
-            .where('searchTags', 'array-contains', this.$route.params.slug)
-            .orderBy('updated', 'desc')
-            .startAfter(this.lastVisible)
-            .limit(10)
-        }
-    }
+    const response = this.$fireStore
+      .collection('recipes')
+      .where('publish', '==', true)
+      .orderBy('updated', 'desc')
+    // .limit(10)
 
     try {
       await response.get().then((querySnapshot) => {
@@ -174,7 +125,7 @@ export default {
         // if (this.currentPage < 5) {
         // this.currentPage++
         if (!this.noFurtherResult) {
-          this.$fetch()
+          // this.$fetch()
         }
         // }
       }
